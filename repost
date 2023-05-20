@@ -23,7 +23,7 @@
   
  {*Ютуб*}
   {youtube channel='UCMDczCuyrKIG-5kdIQ7Kuiw'}
-  {$youtubekey='wwwwwwwwwwwwwwwwwwwwwwwwww'} {*YouTube Data API - нужно получить отдельно: https://dzen.ru/media/bysib/kak-poluchit-rabochii-kliuch-google-api-key-ot-youtube-600878679444cb7e98fa0d38*}
+  {*$youtubekey='wwwwwwwwwwwwwwwwwwwwwwwwww'*} {*YouTube Data API - нужно получить отдельно: https://dzen.ru/media/bysib/kak-poluchit-rabochii-kliuch-google-api-key-ot-youtube-600878679444cb7e98fa0d38*}
   {iterator from=$youtube c='/view_youtube' chat_id=['@tkmisis']
     disable_notif_start = 23
     disable_notif_stop = 7
