@@ -1,0 +1,12 @@
+{if $is_admin}
+  {interval time=1200}
+  {*RSS Новости*}
+  {rss url='http://tourclub.misis.ru/news/rss/'}
+  {iterator from=$rss c='/repost__view_rss'  chat_id=['@tkmisis'] 
+  	like='/like'
+    black_list=['VK.Widgets','vk_post']
+    disable_notif_start = 23
+    disable_notif_stop = 7
+  }
+  {*Можно совместить с репостом VK*}
+{/if}
