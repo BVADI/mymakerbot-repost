@@ -1,0 +1,719 @@
+{key_clear}
+{if !isset($black_list)}{$black_list=[]}{/if}  {*Черный список слов*}
+{if !isset($white_list)}{$white_list=[]}{/if}  {*Белый список слов*}
+{if !isset($repost_black_id)}{$repost_black_id=[]}{/if} {*Черный список групп (id) на репост*}
+{if !isset($registered)}{$registered=1}{/if} {*Для тестирования =0, не заносится в базу как выполненный репост*}
+{if !isset($src_link)}{$src_link=1}{/if} {*Ссылка на источник*}
+{if !isset($sign_link)}{$sign_link='➰ ВК'}{/if} {*Подпись к ссылке на источники в ВК*}
+{if !isset($sign)}{$sign=''}{/if}  {*Подпись снизу*}
+{if !isset($sign_up)}{$sign_up=''}{/if} {*Подпись сверху*}
+{if !isset($media_post)}{$media_post=1}{/if} {*Публикация медиа-поста*}
+{if !isset($ads)}{$ads=0}{/if} {*Реклама*}
+{if !isset($group)}{$group='vk'}{/if}
+{if !isset($show_message)}{$show_message=1}{/if} {*Показывать текст сообщения*}
+{if !isset($show_photo)}{$show_photo=1}{/if}  {*Показывать картинки*}
+{if !isset($show_links)}{$show_links=1}{/if}    {*Показывать ссылки*}
+{if !isset($show_links_details)}{$show_links_details=0}{/if}   {*Показывать детали ссылки*}
+{if !isset($show_links_title)}{$show_links_title=1}{/if}   {*Показывать заголовок ссылки*}
+{if !isset($show_links_description)}{$show_links_description=0}{/if}   {*Показывать описание ссылки*}
+{if !isset($show_videos)}{$show_videos=1}{/if}  {*Показывать видео*}
+{if !isset($show_video_details)}{$show_video_details=0}{/if}  {*Показывать детали видео*}
+{if !isset($show_video_title)}{$show_video_title=1}{/if}  {*Показывать заголовок видео*}
+{if !isset($show_video_description)}{$show_video_description=0}{/if}  {*Показывать описание видео*}
+{if !isset($show_docs)}{$show_docs=1}{/if}  {*Показывать документы*}
+{if !isset($show_audio)}{$show_audio=0}{/if}   {*Показывать аудио (нужен токен и подписка)*}
+{if !isset($show_poll)}{$show_poll=1}{/if}   {*Показывать опросы*}
+{if !isset($show_creator)}{$show_creator=1}{/if}   {*Показывать автора*}
+{if !isset($show_creator_url)}{$show_creator_url=1}{/if}  {*Показывать ссылку на автора*}
+{if !isset($show_repost)}{$show_repost=1}{/if}  {*Показывать репосты*}
+{if !isset($show_repost_comment)}{$show_repost_comment=1}{/if}   {*Показывать комментарий репостов*}
+{if !isset($show_repost_date)}{$show_repost_date=1}{/if}  {*Показывать дату репоста*}
+{if !isset($show_repost_url)}{$show_repost_url=1}{/if}   {*Показывать ссылку на репост*}
+{if !isset($show_repost_source)}{$show_repost_source=1}{/if}   {*Показывать источник репоста*}
+{if !isset($show_post_user)}{$show_post_user=1}{/if}   {*Показывать посты пользователей*}
+{if !isset($show_community)}{$show_community=1}{/if}  {*Показывать посты сообщества*}
+{if !isset($show_hashtag)}{$show_hashtag=1}{/if}  {*Показывать хэштеги*}
+{if !isset($show_photoalbum)}{$show_photoalbum=1}{/if}  {*Показывать альбомы*}
+{if !isset($show_photoalbum_description)}{$show_photoalbum_description=0}{/if}  {*Показывать описание альбомов*}
+{if !isset($disable_notification) && !isset($show_notification)}{$disable_notification=0}
+{elseif !isset($disable_notification) && isset($show_notification)}{$disable_notification=!$show_notification}
+{elseif isset($disable_notification) && !isset($show_notification)}{$disable_notification=$disable_notification}
+{else}{$disable_notification=!$show_notification}{/if}{*Выключить оповещение*}
+{if !isset($disable_notif_start)}{$disable_notif_start=''}{/if}  {*Время старта выключения оповещения*}
+{if !isset($disable_notif_stop)}{$disable_notif_stop=''}{/if} {*Время окончания выключения оповещения*}
+{if !isset($disable_web_page_preview) && !isset($show_web_page_preview)}{$disable_web_page_preview=0}
+{elseif !isset($disable_web_page_preview) && isset($show_web_page_preview)}{$disable_web_page_preview=!$show_web_page_preview}
+{elseif isset($disable_web_page_preview) && !isset($show_web_page_preview)}{$disable_web_page_preview=$disable_web_page_preview}
+{else}{$disable_web_page_preview=!$show_web_page_preview}{/if}{*Выключить превью*}
+{if !isset($token)}{$token=''}{/if}
+{if !isset($keys_src)}{$keys_src=0}{/if} {*Кнопка на источник ВК*}
+{if !isset($keys_links)}{$keys_links=0}{/if} {*Кнопки на ссылки в тексте*}
+{if !isset($keys_docs)}{$keys_docs=0}{/if} {*Кнопки на документы в тексте*}
+{if !isset($keys_videos)}{$keys_videos=0}{/if} {*Кнопки на видео в тексте*}
+{if !isset($keys_albums)}{$keys_albums=0}{/if} {*Кнопки на фото-альбомы в тексте*}
+{if !isset($show_one_photo)}{$show_one_photo=0}{/if} {*Одно фото вместо медиапоста*}
+{if !isset($show_gif)}{$show_gif=1}{/if} {*Отправлять gif анимацию*}
+{if !isset($show_docs_photo)}{$show_docs_photo=0}{/if} {*Показывать ссылки на фото-файлы*}
+{if !isset($show_photo_web_preview)}{$show_photo_web_preview=0}{/if} {*Показывать первое фото в превью*}
+{if !isset($show_video_web_preview)}{$show_video_web_preview=1}{/if} {*Показывать первое видео в превью*}
+{if !isset($photo_height)}{$photo_height=1500}{/if} {*Максимальная высота картинки для обработки, *}
+{if !isset($show_photo_from_video)}{$show_photo_from_video=1}{/if} {*Показывать картинку из видео, 0 - нет, 1 - да, если нет других картинок, 2 - всегда*}
+{if !isset($show_photo_from_link)}{$show_photo_from_link=0}{/if} {*Показывать картинку из ссылок, 0 - нет, 1 - да, если нет других картинок, 2 - всегда*}
+{if !isset($show_log_error)}{$show_log_error=1}{/if} {*Показывать лог ошибок отправки*}
+{if !isset($show_log_send)}{$show_log_send=1}{/if} {*Показывать лог публикаций*}
+{if !isset($send_message_standart)}{$send_message_standart=0}{/if} {*0 - Отправка текста порезанного на заданное кол-во символов, 1 - стандартная отправка всего, режется автоматически*}
+{if !isset($send_message_len)}{$send_message_len=3500}{/if} {*Длина отправляемого текста*}
+{if !isset($show_media_keys)}{$show_media_keys=0}{/if} {*Показывать кнопки для медиа поста*}
+
+{if $v.message|check_black_list:$black_list && $v.message|check_white_list:$white_list 
+    && (!$registered || !$v.guid|group_vk:$group:1) 
+    && (!$v.marked_as_ads || ($v.marked_as_ads && $ads))
+    && (($show_repost && (isset($v.original.copy_history.0.id))) || !isset($v.original.copy_history.0.id) )
+    && (($show_post_user &&  ($v.original.from_id != $v.original.owner_id)) || !($v.original.from_id != $v.original.owner_id ))
+    && (($show_community && ($v.original.from_id == $v.original.owner_id) && !isset($v.original.copy_history.0.id)) 
+    	|| !(!isset($v.original.copy_history.0.id) && ($v.original.from_id == $v.original.owner_id)))
+    }     
+
+{$v.message = str_replace('<', '', $v.message)}
+{$v.message = str_replace('>', '', $v.message)}
+
+{* Выключение уведомлений *}
+{if !empty($disable_notif_stop) && !empty($disable_notif_start)}
+	{$date = $v.original.date}
+	{$tstart = strtotime("today + {$disable_notif_start} hours")}
+	{$tstop = strtotime("today + {$disable_notif_start} hours")}
+	{if $tstart < $tstop}
+		{if $date > $tstart && $date < $tstop}
+   		 	{$disable_notification = 1}
+		{/if}
+ 	{else} 
+		{if $date > $tstart || $date < $tstop}
+    		{$disable_notification = 1}
+    	{/if}
+	{/if} 
+{/if}
+
+{* HashTag *}
+{if !$show_hashtag}
+{*$v.message = $v.message|regex_replace:"/#.*/":""*}
+{$v.message = $v.message|regex_replace:'/#(\S+)/':''}
+{/if}
+
+{* Repost comment *}
+{if !empty($v.original.copy_history.0.id) && ($show_repost_comment || $show_repost_source )}
+{if mb_substr($v.original.copy_history.0.owner_id,0,1) == "-"}
+{$url="https://api.vk.com/method/groups.getById?group_id={str_replace("-","",$v.original.copy_history.0.owner_id)}&access_token={$service_key}&lang=ru&v=5.103"}
+{api url=$url method='GET' format='json' assign='gr'}
+
+{$repost_url = ""}
+  {if $show_repost_url}
+    {$repost_url = "https://vk.com/public{$gr.response.0.id}"}
+  {/if}
+{$repost_url = "<a href='$repost_url'>{$gr.response.0.name}</a>"}
+{$responseid = $gr.response.0.id}
+
+{else}
+{$url="https://api.vk.com/method/users.get?user_ids={$v.original.copy_history.0.owner_id}&fields=sex&access_token={$service_key}&lang=ru&v=5.103"}
+{api url=$url method='GET' format='json' assign='user'}
+{$repost_url = ""}
+{if $show_repost_url}
+  {$repost_url = "https://vk.com/id{$user.response.0.id}"}
+{/if}
+{$repost_url = "<a href='$repost_url'>{$user.response.0.last_name} {$user.response.0.first_name}</a>"}
+{$responseid = $user.response.0.id}
+
+{/if}
+{if $show_repost_date}
+  {$v.message = "(<code>{date('d.m.Y H:i', $v.original.copy_history.0.date)}</code>)
+
+`$v.message`"}
+{/if}
+
+{if $show_repost_source}
+{$v.message = "↪ $repost_url
+`$v.message`"}
+{/if}
+
+{if $show_repost_comment}
+{if (isset($v.original.text) && !empty($v.original.text) )}
+   {$repost_comment="{$v.original.text|vk_link:true}
+
+--------------------------------------------------------------"}
+{$v.message = "$repost_comment
+`$v.message`"}
+{/if}
+
+
+{/if}
+{/if}
+
+{$v.message=$v.message|vk_link:true}
+{$v.message=$v.message|vk_link:true}
+
+{*attach*} 
+   {if !empty($v.original.attachments) }
+    	{$attach = $v.original.attachments}
+   {/if}    
+   {if !empty($v.original.copy_history.0.attachments)}
+    	{$attachcopy = $v.original.copy_history.0.attachments}
+   {/if}
+   
+{* Photo *}
+{if $show_photo || $media_post || $show_one_photo || $show_photo_web_preview || $show_videos}
+  {$v.photo=[]}
+	{if !empty($attach)}
+  		 {foreach from=$attach item=p1}
+         	{if $p1.type == 'photo'}
+   				{$height = 0 }
+   				{$photo2 = ''}
+               		{foreach from=$p1['photo']['sizes'] item=p2}
+                        {if $p2.height >= $height && $p2.height < $photo_height} 
+ 							{$photo2 = $p2['url']}
+      						{$height = $p2['height']}
+                        {/if}
+                    {/foreach}
+                {$v.photo[] = ['type' => 'photo', 'media' => $photo2, 'caption'=>'']}
+			{/if}
+            {if ($p1.type == 'doc') && ($p1.doc.ext == 'jpg')}
+   					{$height = 0 }
+   					{$photo2 = ''}
+        	       		{foreach from=$p1['doc']['preview']['photo']['sizes'] item=p2}
+          	              {if $p2.height >= $height && $p2.height < $photo_height}
+ 								{$photo2 = $p2['src']}
+      							{$height = $p2['height']}
+            	            {/if}
+           		        {/foreach}
+                    {$v.photo[] = ['type' => 'photo', 'media' => $photo2, 'caption'=>'']}
+			{/if}
+            {if $p1.type == 'album'}
+   				{$height = 0}
+   				{$photo2 = ''}
+               		{foreach from=$p1['album']['thumb']['sizes'] item=p2}
+                        {if $p2.height >= $height && $p2.height < $photo_height}
+ 							{$photo2 = $p2['url']}
+      						{$height = $p2['height']}
+                        {/if}
+                    {/foreach}
+                {$v.photo[] = ['type' => 'photo', 'media' => $photo2, 'caption'=>'']}
+			{/if}
+            {if $show_photo_from_link == 1 && count($v.photo) == 0}
+              {$show_photo_f_link = 1}
+            {elseif $show_photo_from_link == 2}
+              {$show_photo_f_link = 1}
+            {else}
+              {$show_photo_f_link = 0}
+            {/if}  
+            {if $show_photo_f_link}
+             {if $p1.type == 'link' && !empty($p1.link.photo) && ($p1.link.description != 'Playlist')}
+   				{$height = 0}
+   				{$photo2 = ''}
+               		{foreach from=$p1['link']['photo']['sizes'] item=p2}
+                        {if $p2.height > $height && $p2.height < $photo_height}
+ 							{$photo2 = $p2['url']}
+      						{$height = $p2['height']}
+                        {/if}
+                    {/foreach}
+                {$v.photo[] = ['type' => 'photo', 'media' => $photo2, 'caption'=>'']}
+			{/if}
+           {/if}
+		{/foreach}
+        {if count($v.video)>0 && $show_videos && !empty($token)}
+       
+        {$vi=0}
+ 		 {foreach from=$attach item=p1}
+   			{if $p1.type == 'video'}
+            	{if !empty($p1.video.access_key)}
+                    {$videos="{$p1.video.owner_id}_{$p1.video.id}_{$p1.video.access_key}"}
+                {else}
+                    {$videos="{$p1.video.owner_id}_{$p1.video.id}"}
+                {/if}
+                {$url="https://api.vk.com/method/video.get?&access_token=$token&owner_id={$p1.video.owner_id}&videos=$videos&v=5.126"}
+                {api url=$url method='GET' format='json' assign='vid'}
+                {if !empty($vid.response.items.0.files.external)}
+                  {$v.video.$vi.url = $vid.response.items.0.files.external}
+                 {if $show_photo_from_video != 2}{$show_photo_from_video = 0}{/if}
+                {else}
+                  {if !empty($p1.video.access_key) && mb_substr($p1.video.access_key,0,3)=='ln-'}
+                    {$v.video.$vi.url ="https://vk.com/video`$p1.video.owner_id`_`$p1.video.id`?list=`$p1.video.access_key`"}
+                  {else}
+                    {$v.video.$vi.url ="https://vk.com/video`$p1.video.owner_id`_`$p1.video.id`"}
+                  {/if}
+   			    {/if}
+                
+                {$vi=$vi+1}
+   			{/if}
+  		 {/foreach}
+        {/if} 
+            {if $show_photo_from_video == 1 && count($v.photo) == 0}
+              {$show_photo_f_video = 1}
+            {elseif $show_photo_from_video == 2}
+              {$show_photo_f_video = 1}
+            {else}
+              {$show_photo_f_video = 0}
+            {/if} 
+
+          {$vi=0}
+ 		   {foreach from=$attach item=p1}
+   			{if $p1.type == 'video'}
+              {if $show_photo_f_video}
+            	{if !empty($p1.video.photo_1280)}
+                	{$v.photo[] = ['type' => 'photo', 'media' => $p1.video.photo_1280, 'caption'=>'']}
+                 {elseif !empty($p1.video.photo_800)} 
+                 	{$v.photo[] = ['type' => 'photo', 'media' => $p1.video.photo_800, 'caption'=>'']}
+                 {elseif !empty($p1.video.photo_640)} 
+                 	{$v.photo[] = ['type' => 'photo', 'media' => $p1.video.photo_640, 'caption'=>'']}
+                {/if} 
+ 		      {/if}               
+                {if !empty($p1.video.access_key) && mb_substr($p1.video.access_key,0,3)=='ln-'}
+                    {$v.video.$vi.url ="https://vk.com/video`$p1.video.owner_id`_`$p1.video.id`?list=`$p1.video.access_key`"}
+                {else}
+                    {$v.video.$vi.url ="https://vk.com/video`$p1.video.owner_id`_`$p1.video.id`"}
+                {/if}
+                {$vi=$vi+1}
+   			{/if}
+  		   {/foreach}
+
+	{/if}
+	{if !empty($attachcopy)}
+  		 {foreach from=$attachcopy item=p1}
+         	{if $p1.type == 'photo'}
+   				{$height = 0 }
+   				{$photo2 = ''}
+               		{foreach from=$p1['photo']['sizes'] item=p2}
+                        {if $p2.height >= $height && $p2.height < $photo_height}
+ 							{$photo2 = $p2['url']}
+      						{$height = $p2['height']}
+
+                        {/if}
+                    {/foreach}
+                {$v.photo[] = ['type' => 'photo', 'media' => $photo2, 'caption'=>'']}
+
+			{/if}
+            {if ($p1.type == 'doc') && ($p1.doc.ext == 'jpg')}
+   					{$height = 0 }
+   					{$photo2 = ''}
+        	       		{foreach from=$p1['doc']['preview']['photo']['sizes'] item=p2}
+          	              {if $p2.height >= $height && $p2.height < $photo_height}
+ 								{$photo2 = $p2['src']}
+      							{$height = $p2['height']}
+            	            {/if}
+           		        {/foreach}
+                    {$v.photo[] = ['type' => 'photo', 'media' => $photo2, 'caption'=>'']}
+			{/if}
+            {if $p1.type == 'album'}
+   				{$height = 0}
+   				{$photo2 = ''}
+               		{foreach from=$p1['album']['thumb']['sizes'] item=p2}
+                        {if $p2.height >= $height && $p2.height < $photo_height}
+ 							{$photo2 = $p2['url']}
+      						{$height = $p2['height']}
+                        {/if}
+                    {/foreach}
+                {$v.photo[] = ['type' => 'photo', 'media' => $photo2, 'caption'=>'']}
+			{/if}
+            {if $show_photo_from_link == 1 && count($v.photo) == 0}
+              {$show_photo_f_link = 1}
+            {elseif $show_photo_from_link == 2}
+              {$show_photo_f_link = 1}
+            {else}
+              {$show_photo_f_link = 0}
+            {/if}  
+            {if $show_photo_f_link}
+            {if $p1.type == 'link' && !empty($p1.link.photo) && ($p1.link.description != 'Playlist')}
+   				{$height = 0}
+   				{$photo2 = ''}
+               		{foreach from=$p1['link']['photo']['sizes'] item=p2}
+                        {if $p2.height > $height && $p2.height < $photo_height}
+ 							{$photo2 = $p2['url']}
+      						{$height = $p2['height']}
+                        {/if}
+                    {/foreach}
+                {$v.photo[] = ['type' => 'photo', 'media' => $photo2, 'caption'=>'']}
+			{/if}  
+            {/if}
+		{/foreach}
+        {if count($v.video)>0 && $show_videos && $token}
+        {$vi=0}
+ 		 {foreach from=$attachcopy item=p1}
+   			{if $p1.type == 'video'}
+                {if !empty($p1.video.access_key)}
+                    {$videos="{$p1.video.owner_id}_{$p1.video.id}_{$p1.video.access_key}"}
+                {else}
+                    {$videos="{$p1.video.owner_id}_{$p1.video.id}"}
+                {/if}
+                {$url="https://api.vk.com/method/video.get?&access_token=$token&owner_id={$p1.video.owner_id}&videos=$videos&v=5.126"}
+                {api url=$url method='GET' format='json' assign='vid'}
+                {if !empty($vid.response.items.0.files.external)}
+                  {$v.video.$vi.url = $vid.response.items.0.files.external}
+                  {if $show_photo_from_video != 2}{$show_photo_from_video = 0}{/if}
+                {else}
+                  {if !empty($p1.video.access_key) && mb_substr($p1.video.access_key,0,3)=='ln-'}
+                    {$v.video.$vi.url ="https://vk.com/video`$p1.video.owner_id`_`$p1.video.id`?list=`$p1.video.access_key`"}
+                  {else}
+                    {$v.video.$vi.url ="https://vk.com/video`$p1.video.owner_id`_`$p1.video.id`"}
+                  {/if}
+   			    {/if}
+
+                {$vi=$vi+1}
+                
+             {/if}
+  		 {/foreach}
+        {/if} 
+            {if $show_photo_from_video == 1 && count($v.photo) == 0}
+              {$show_photo_f_video = 1}
+            {elseif $show_photo_from_video == 2}
+              {$show_photo_f_video = 1}
+            {else}
+              {$show_photo_f_video = 0}
+            {/if} 
+
+          {$vi=0}
+ 		   {foreach from=$attachcopy item=p1}
+   			{if $p1.type == 'video'}
+              {if $show_photo_f_video}
+            	{if !empty($p1.video.photo_1280)}
+                	{$v.photo[] = ['type' => 'photo', 'media' => $p1.video.photo_1280, 'caption'=>'']}
+                 {elseif !empty($p1.video.photo_800)} 
+                 	{$v.photo[] = ['type' => 'photo', 'media' => $p1.video.photo_800, 'caption'=>'']}
+                 {elseif !empty($p1.video.photo_640)} 
+                 	{$v.photo[] = ['type' => 'photo', 'media' => $p1.video.photo_640, 'caption'=>'']}
+                {/if}
+		      {/if}                
+                {if !empty($p1.video.access_key) && mb_substr($p1.video.access_key,0,3)=='ln-'}
+                    {$v.video.$vi.url ="https://vk.com/video`$p1.video.owner_id`_`$p1.video.id`?list=`$p1.video.access_key`"}
+                {else}
+                    {$v.video.$vi.url ="https://vk.com/video`$p1.video.owner_id`_`$p1.video.id`"}
+                {/if}
+                {$vi=$vi+1}
+   			{/if}
+  		   {/foreach}
+
+	{/if}
+    
+    {if $show_photo_web_preview}
+      {$v.message = "<a href='{$v.photo.0.media}'>⠀</a>{$v.message}"}
+      {$disable_web_page_preview=0}
+      {$show_photo=0}
+      {$media_post=0}
+    {/if}
+{/if}
+
+{* LINKS *}
+{if count($v.link)>0 && ($show_links || $keys_links)}
+  {foreach from=$v.link key=k item=v2}
+    {$url=$v2['url']}
+    {$msg=$v2['url']}
+    {$desc=""}
+    {if (isset($v2['title']) && !empty($v2['title']) && $show_links_title)}{$msg=$v2['title']}{/if}
+      {if $show_links}
+        {$v.message = "`$v.message` 
+    
+🔗 <a href='{$url}'>{$msg}</a>"}
+    {if (isset($v2['description']) && !empty($v2['description']) && $show_links_description)}{$desc=$v2['description']}
+    {$v.message = "`$v.message` 
+`$desc`"}    
+    {/if}
+      {/if}
+    {if $keys_links}
+	 {key l=100+$k t="🔗 `$msg`" c=$url}
+    {/if} 
+  {/foreach}
+{/if}
+
+
+{* VIDEOS *}
+{if count($v.video)>0 && ($show_videos || $keys_videos || $show_video_web_preview)}
+{if !empty($token) && $show_video_web_preview}
+  {$url2=$v.video.0.url}
+  {$v.message = "<a href='{$url2}'>⠀</a>{$v.message}"}
+  {$disable_web_page_preview=0}
+{/if}
+{foreach from=$v.video key=k item=v2}
+{$url=$v2['url']}
+{$msg="video"}
+{$desc=""}
+{if (isset($v2['title']) && !empty($v2['title']) && $show_video_title)}{$msg=$v2['title']}{/if}
+  {if $show_videos}
+    {$v.message = "`$v.message` 
+
+🎥 <a href='{$url}'>{$msg}</a>"}
+{if (isset($v2['description']) && !empty($v2['description']) && $show_video_description)}{$desc=$v2['description']}
+    {$v.message = "`$v.message` 
+  $desc"}
+{/if}
+{if (isset($v2['views']) && !empty($v2['views']) && $show_video_details)}
+    {$v.message = "`$v.message` 
+  👁 <i>{$v2['views']} раз</i>"}
+{/if}
+{if (isset($v2['duration']) && !empty($v2['duration']) && $show_video_details)}
+    {$v.message = "`$v.message` 
+  ⏳ <i>{$v2['duration']} сек.</i>"}
+{/if}
+{/if}
+    {if $keys_videos}
+	 {key l=110+$k t="🎥 `$msg`" c=$url}
+    {/if} 
+
+{/foreach}
+{/if}
+
+{* DOC *}
+{if count($v.doc)>0 && ($show_docs || $keys_docs || $show_gif || $show_docs_photo)}
+  {foreach from=$v.doc key=k item=v2}
+    {$url=$v2['url']}
+    {$msg=$v2['url']}  
+    {if $v2['ext'] == 'gif'}
+       {if $show_gif}
+         {tg_sendVideofile chat_id=$chat_id video="{$v2['url']}&mp4=1" caption=''  disable_notification=$disable_notification assign=res_gif}
+         {if $show_log_error}{if empty($res_gif.0.result.message_id)} {import c='repost__log' msg="Gif не отправлена: \n {$res_gif|json}"} {/if}{/if}
+       {/if}
+   {else}     
+      {if $v2['ext'] == 'jpg'}
+  		{if $show_docs_photo}
+		{if (isset($v2['title']) && !empty($v2['title']) )}{$msg=$v2['title']}{/if}
+      	{$v.message = "`$v.message` 
+    
+📷 <a href='{$url}'>{$msg}</a>"} 
+		{/if}
+   	  {else}
+      	{if (isset($v2['title']) && !empty($v2['title']) )}{$msg=$v2['title']}{/if}
+          {if $show_docs}
+      	    {$v.message = "`$v.message` 
+    
+📝 <a href='{$url}'>{$msg}</a>"}
+          {/if}
+         {if $keys_docs}
+	       {key l=120+$k t="📝 `$msg`" c=$url}
+         {/if} 
+       {/if}
+     {/if}
+  {/foreach}
+{/if}
+
+{* Album *}
+{if $show_photoalbum || $keys_albums}
+   {if !empty($attachcopy)}{$attach = $attachcopy}{/if}    
+   	{if !empty($attach)}
+        {foreach from=$attach item=fa}
+         	{if $fa.type == 'album'}
+
+                	{$fotoalbumurl = "https://vk.com/album`$fa['album']['owner_id']`_`$fa['album']['id']`"}
+               		{$fotoalbumtitle = $fa['album']['title']}
+                	{$fotoalbumdes = ""}
+                    {if $show_photoalbum}
+                	  {$v.message = "`$v.message`
+
+📷  <a href='{$fotoalbumurl}'>Фотоальбом ''{$fotoalbumtitle}''</a>"} 
+                	    {if (isset($fa['album']['description']) && !empty($fa['album']['description']) && $show_photoalbum_description)}
+                          {$fotoalbumdes = $fa['album']['description']}
+                	      {$v.message = "`$v.message`
+{$fotoalbumdes}"}                     
+                        {/if}
+                    {/if}
+                    {if $keys_albums}
+	                   {key l=130+$k t="📷 `$fotoalbumtitle`" c=$fotoalbumurl}
+                    {/if}
+			{/if}
+  
+  		{/foreach}
+    {/if}    
+{/if}
+
+{* Like *}
+{if isset($like) && $like}
+	{import c=$like}
+{/if}
+
+{* ССЫЛКА НА Автора *}
+{if $show_creator && !empty($v.original.signer_id)}
+{$url="https://api.vk.com/method/users.get?user_ids={$v.original.signer_id}&fields=sex&access_token={$service_key}&lang=ru&v=5.103"}
+{api url=$url method='GET' format='json' assign='user'}
+
+{$creator_url = ""}
+{if $show_creator_url}
+{$creator_url = "https://vk.com/id{$user.response.0.id}"}
+{/if}
+
+{$v.message = "`$v.message`
+
+{if $user.response.0.sex==1}👩‍💻 {else}👨‍💻 {/if} <a href='{$creator_url}'>{$user.response.0.last_name} {$user.response.0.first_name}</a>"}
+{/if}
+
+{* ССЫЛКА НА Автора в репосте*}
+{if $show_creator && !empty($v.original.copy_history.0.signer_id)}
+{$url="https://api.vk.com/method/users.get?user_ids={$v.original.copy_history.0.signer_id}&fields=sex&access_token={$service_key}&lang=ru&v=5.103"}
+{api url=$url method='GET' format='json' assign='user'}
+{$creator_url = ""}
+{if $show_creator_url}
+{$creator_url = "https://vk.com/id{$user.response.0.id}"}
+{/if}
+{$v.message = "`$v.message`
+
+{if $user.response.0.sex==1}👩‍💻 {else}👨‍💻 {/if} <a href='{$creator_url}'>{$user.response.0.last_name} {$user.response.0.first_name}</a>"}
+
+{/if}
+
+{* ССЫЛКА НА Автора если все постят*}
+{if $show_creator && $v.original.from_id != $v.original.owner_id}
+{$url="https://api.vk.com/method/users.get?user_ids={$v.original.from_id}&fields=sex&access_token={$service_key}&lang=ru&v=5.103"}
+{api url=$url method='GET' format='json' assign='user'}
+{$creator_url = ""}
+{if $show_creator_url}
+{$creator_url = "https://vk.com/id{$user.response.0.id}"}
+{/if}
+{$v.message = "{if $user.response.0.sex==1}👩‍💻 {else}👨‍💻 {/if} <a href='{$creator_url}'>{$user.response.0.last_name} {$user.response.0.first_name}</a>
+
+`$v.message`"}
+{/if}
+
+{* SIGN *}
+{if $sign }
+{$v.message = "{$v.message}
+{$sign}"}
+{/if}
+{if $sign_up }
+{$v.message = "{$sign_up}
+{$v.message}"}
+{/if}
+
+{* ССЫЛКА НА ИСТОЧНИК *}
+{if $src_link && !empty($src_link)}
+{$v.message = "`$v.message`
+
+<a href='{$v.src_link}'>`$sign_link`</a>"}
+{/if}
+{if $keys_src}
+	{key l=140 t=$sign_link c=$v.src_link}
+{/if}
+
+{* Черный список репостов *}
+{if !empty($responseid) && !empty($repost_black_id) }
+{if in_array($responseid, $repost_black_id)}
+{$show_poll = 0}
+{$show_photo = 0}
+{$show_message = 0}
+{$media_post = 0}
+{/if}{/if}
+
+{*Разделять медия-пост на части, чтобы работали кнопки*}
+{if $show_media_keys}
+  {if (!$keys_src && !$keys_links && !$keys_docs && !$keys_videos && !$keys_albums && !(isset($like) && $like)) }
+     {$media_k=1}
+  {else}
+     {$media_k=0}
+  {/if}   
+{else}
+   {$media_k=1}
+{/if}
+
+ {if $show_log_send} 
+ {if !empty($sign_up)}{$loggchat = $sign_up}{else}{$loggchat = $chat_id[0]}{/if}
+ {if $show_message}{$show_mes=": 🕶 "}{else}{$show_mes=": ✖️ "}{/if}
+ {if !empty($responseid)}{$logrepost = ": ↪ "}{else}{$logrepost = ""}{/if}
+ {if mb_strlen($v.message, 'utf-8')>0}{$loggms =": ✏️ {mb_strlen($v.message, 'utf-8')}"}{else}{$loggms =""}{/if}
+ {if count($v.photo)>0}{$loggphoto =": 🖼 {count($v.photo)}"}{else}{$loggphoto =""}{/if}
+ {if count($v.video)>0}{$loggvideo =": 🎞 {count($v.video)}"}{else}{$loggvideo =""}{/if}
+ {$logg = "$loggchat $show_mes $logrepost $loggms $loggphoto $loggvideo" }
+ {import c='repost__log2' msg=$logg}
+ {/if}
+
+  {* ==== SEND MEDIA IF count(photo) == 1 *}
+  {if (count($v.photo) == 1 && $show_photo) || (count($v.photo) > 1 && $show_one_photo)}
+ 	 {if (mb_strlen($v.message, 'utf-8') <= 1000) && $show_message}
+    	{tg_sendPhoto chat_id=$chat_id  photo=$v.photo[0]['media'] caption = $v.message disable_notification=$disable_notification  keys=1 assign='res_phototext'}
+        {if $show_log_error}{if empty($res_phototext.0.result.message_id)} {import c='repost__log' msg="Фото с текстом не отправлено: \n {$res_phototext|json}"} {/if}{/if}
+     {else}
+     	{tg_sendPhoto chat_id=$chat_id  photo=$v.photo[0]['media'] caption='' disable_notification=$disable_notification  keys=0 assign='res_photo'}
+        {if $show_log_error}{if empty($res_photo.0.result.message_id)} {import c='repost__log' msg="Фото не отправлено: </br> {$res_photo|json}"} {/if}{/if}
+     {/if}
+  {/if}
+
+  {* ==== SEND MEDIA IF count(photo)>=2 *}
+  {if count($v.photo) >= 2 && $media_post && !($show_one_photo)}
+      {if (mb_strlen($v.message, 'utf-8') <= 1000) && $show_message && $media_k}
+        {tg_sendMediaGroup chat_id=$chat_id  media=$v.photo caption=$v.message disable_notification=$disable_notification  keys=0 assign='res_mediatext'}
+        {if $show_log_error}{if empty($res_mediatext.0.result.0.message_id) && empty($res_mediatext.result.0.message_id)} {import c='repost__log' msg="Медиа с текстом не отправлено: \n {$res_mediatext|json}"} {/if}{/if}
+      {else}
+        {tg_sendMediaGroup chat_id=$chat_id  media=$v.photo caption='' disable_notification=$disable_notification  keys=0 assign='res_media'}
+        {if $show_log_error}{if empty($res_media.0.result.0.message_id)} {import c='repost__log' msg="Медиа не отправлено: \n {$res_media|json}"} {/if}{/if}
+      {/if}
+  {/if}
+
+  {$w=sleep(4)}
+
+  {if ((count($v.photo) == 0 || (count($v.photo) >= 1 && mb_strlen($v.message, 'utf-8') > 1000) || (count($v.photo) >= 2 && !($show_one_photo) && !$media_k) || !$media_post || !$show_photo) && $show_message  )}  {*|| (count($v.photo) >= 1 && !$show_photo) || (count($v.photo) >= 2 && !$media_post)*}
+     {if $send_message_standart}
+            {tg_sendMessage text=$v.message chat_id=$chat_id disable_web_page_preview=$disable_web_page_preview disable_notification=$disable_notification keys=1 assign='res_textall'}
+            {if $show_log_error}{if empty($res_textall.0.result.message_id)} {import c='repost__log' msg="Текст-all не отправлен: \n {$res_textall|json}"} {/if}{/if}
+     {else}
+      
+        {if mb_strlen($v.message, 'utf-8') < $send_message_len}
+        	{tg_sendMessage text=$v.message chat_id=$chat_id disable_web_page_preview=$disable_web_page_preview disable_notification=$disable_notification keys=1 assign='res_text'}
+            {if $show_log_error}{if empty($res_text.0.result.message_id)} {import c='repost__log' msg="Текст3500 не отправлен: \n {$res_text|json}"} {/if}{/if}
+        {elseif mb_strlen($v.message, 'utf-8') < $send_message_len*2}
+        	{tg_sendMessage text=mb_substr($v.message,0,$send_message_len) chat_id=$chat_id disable_web_page_preview=$disable_web_page_preview disable_notification=$disable_notification keys=0 assign='res_text21'}
+			{tg_sendMessage text=mb_substr($v.message,$send_message_len,$send_message_len*2) chat_id=$chat_id disable_web_page_preview=$disable_web_page_preview disable_notification=$disable_notification keys=1 assign='res_text22'}
+            {if $show_log_error}{if empty($res_text21.0.result.message_id)} {import c='repost__log' msg="Текст7000-1 не отправлен: \n {$res_text21|json}"} {/if} {/if} 
+            {if $show_log_error}{if empty($res_text22.0.result.message_id)} {import c='repost__log' msg="Текст7000-2 не отправлен: \n {$res_text22|json}"} {/if} {/if}
+        {else}
+        	{tg_sendMessage text=mb_substr($v.message,0,$send_message_len) chat_id=$chat_id disable_web_page_preview=$disable_web_page_preview disable_notification=$disable_notification keys=0 assign='res_text31'}
+            {if $show_log_error}{if empty($res_text31.0.result.message_id)} {import c='repost__log' msg="Текст10500-1 не отправлен: \n {$res_text31|json}"} {/if} {/if} 
+			{tg_sendMessage text=mb_substr($v.message,$send_message_len,$send_message_len*2) chat_id=$chat_id disable_web_page_preview=$disable_web_page_preview disable_notification=$disable_notification keys=0 assign='res_text32'}
+            {if $show_log_error}{if empty($res_text32.0.result.message_id)} {import c='repost__log' msg="Текст10500-2 не отправлен: \n {$res_text32|json}"} {/if} {/if}
+        	{tg_sendMessage text=mb_substr($v.message,$send_message_len*2,$send_message_len*3) chat_id=$chat_id disable_web_page_preview=$disable_web_page_preview disable_notification=$disable_notification keys=1 assign='res_text33'} 
+            {if $show_log_error}{if empty($res_text33.0.result.message_id)} {import c='repost__log' msg="Текст10500-3 не отправлен: \n {$res_text33|json}"} {/if} {/if}
+        {/if}
+    {/if}
+  {/if}  
+
+{* ОТПРАВКА АУДИОФАЙЛОВ ЕСЛИ ЕСТЬ *} 
+  {if count($v.audio) > 0 && $show_audio}
+  {foreach from=$v.audio item=a}
+      {if (isset($a.url) && $a.url !== 'https://vk.com/mp3/audio_api_unavailable.mp3')}
+          {tg_sendAudiofile chat_id=$chat_id audio=$a.url artist=$a.artist title=$a.title disable_notification=$disable_notification assign='res_audio'}
+          {if $show_log_error}{if empty($res_audio.0.result.message_id)} {import c='repost__log' msg="Музыка не отправлена: \n {$res_audio|json}"}{/if} {/if}
+      {/if}
+  {/foreach}
+  {/if}
+  
+  {$w=sleep(2)}
+  
+{* ГОЛОСОВАНИЕ *}  
+  {if !empty($v.poll) && $show_poll}
+    {$ans=[]}
+	{foreach from=$v.poll.answers item=a}
+     {if mb_strlen($a.text, 'utf-8') > 100}
+       {$a.text = $a.text|truncate:100}
+     {/if}  
+       {$ans[]= $a.text}
+    {/foreach}
+     
+   {if !empty($attachcopy)}
+    	{$attach = $attachcopy}
+   {/if}
+     
+     {if !empty($attach)}
+    	 {foreach from=$attach item=po}
+     		{if $po.type == 'poll'}
+     			{$multiple = $po.poll.multiple}
+    			{$anonymous = $po.poll.anonymous}
+    		{/if}
+         {/foreach}
+     {/if}
+
+     {if ($anonymous == 1) || !isset($group_id)}
+     	  {$group_id = $chat_id}
+          {$anonymous = 1}
+     {/if} 
+     
+     {if mb_strlen($v.message, 'utf-8') > 0}
+	  {tg_sendPoll question=$v.poll.question options=$ans chat_id=$group_id keys=0 is_anonymous=$anonymous allows_multiple_answers=$multiple  disable_notification=$disable_notification assign='res_pool'}
+      {if $show_log_error}{if empty($res_pool.0.result.message_id)} {import c='repost__log' msg="Опрос не отправлен: \n {$res_pool|json}"} {/if} {/if}
+    {else}
+      {tg_sendPoll question=$v.poll.question options=$ans chat_id=$group_id keys=1 is_anonymous=$anonymous allows_multiple_answers=$multiple  disable_notification=$disable_notification assign='res_pool'}
+      {if $show_log_error}{if empty($res_pool.0.result.message_id)} {import c='repost__log' msg="Опрос не отправлен: \n {$res_pool|json}"} {/if} {/if}
+     {/if}
+  {/if}
+  {if !empty($res_log) && isset($res_log)}{tg_editMessageText text="✅ {$res_log.result.text}" message_id=$res_log.result.message_id chat_id=$res_log.result.chat.id}{/if}
+
+{/if}
