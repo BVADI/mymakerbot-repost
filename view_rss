@@ -1,0 +1,101 @@
+{key_clear}
+{if !isset($black_list)}{$black_list=[]}{/if}
+{if !isset($white_list)}{$white_list=[]}{/if}
+{if !isset($registered)}{$registered=1}{/if}
+{if !isset($src_link)}{$src_link=1}{/if}
+{if !isset($sign)}{$sign=''}{/if}
+{if !isset($group)}{$group='rss'}{/if}
+
+{if !isset($v.description)}{$v['description']=''}{/if}
+{if !isset($v.link)}{$v['link']=''}{/if}
+{if !isset($v.pubDate)}{$v['pubDate']=''}{/if}
+{if !isset($v.title)}{$v['title']=''}{/if}
+{if !isset($disable_notification)}{$disable_notification=0}{/if}
+{if !isset($disable_notif_start)}{$disable_notif_start=''}{/if}
+{if !isset($disable_notif_stop)}{$disable_notif_stop=''}{/if}
+
+{if $v.description|check_black_list:$black_list && $v.description|check_white_list:$white_list 
+	&& (!$registered || !$v.guid|group_rss:$group:1) }
+
+{if !isset($keys)}
+   {$keys=0}
+{/if}
+
+{import c='repost__log' msg=$v|json}
+
+{* Выключение уведомлений *}
+{if !empty($disable_notif_stop) && !empty($disable_notif_start)}
+	{$date = strtotime("{$v.pubDate} - 3 hours")}
+    {import c='repost__log' msg="$date"}
+	{$tstart = strtotime("today + {$disable_notif_start} hours")}
+	{$tstop = strtotime("today + {$disable_notif_start} hours")}
+	{if $tstart < $tstop}
+		{if $date > $tstart && $date < $tstop}
+   		 	{$disable_notification = 1}
+		{/if}
+ 	{else} 
+		{if $date > $tstart || $date < $tstop}
+    		{$disable_notification = 1}
+    	{/if}
+	{/if} 
+{/if}
+
+{$v.description = $v.description|unescape:"html"}
+{$v.description = str_replace('nbsp;', ' ', $v.description)}
+{$v.description = str_replace('nbsp', ' ', $v.description)}
+{$v.description = str_replace('lt;', '<', $v.description)}
+{$v.description = str_replace('gt;', '>', $v.description)}
+{$v.description = str_replace('amp;', '&', $v.description)}
+{$v.description = str_replace('copy;', '©', $v.description)}
+{$v.description = str_replace('reg;', '®', $v.description)}
+{$v.description = str_replace("laquo;", '«', $v.description)}
+{$v.description = str_replace('raquo;', '»', $v.description)}
+{$v.description = str_replace('deg;', '°', $v.description)}
+{$v.description = str_replace('trade;', '™', $v.description)}
+{$v.description = str_replace('plusmn;', '±', $v.description)}
+{$v.description = str_replace('shy;', '', $v.description)}
+{$v.description = str_replace('ndash;', '–', $v.description)}
+{$v.description = str_replace('mdash;', '—', $v.description)}
+{$v.description = str_replace('quot;', '"', $v.description)}
+
+
+{$v.description = str_replace('& ', ' ', $v.description)}
+{$v.description = str_replace('&<', '<', $v.description)}
+{$v.description = str_replace('&>', '>', $v.description)}
+{$v.description = str_replace('&&', '&', $v.description)}
+{$v.description = str_replace('&©', '©', $v.description)}
+{$v.description = str_replace('&®', '®', $v.description)}
+{$v.description = str_replace("&«", '«', $v.description)}
+{$v.description = str_replace('&»', '»', $v.description)}
+{$v.description = str_replace('&°', '°', $v.description)}
+{$v.description = str_replace('&™', '™', $v.description)}
+{$v.description = str_replace('&±', '±', $v.description)}
+{$v.description = str_replace('&­', '', $v.description)}
+{$v.description = str_replace('&–', '–', $v.description)}
+{$v.description = str_replace('&—', '—', $v.description)}
+{$v.description = str_replace('&"', '"', $v.description)}
+{$v.description = str_replace('…', '', $v.description)}
+{$v.description = str_replace('…', '', $v.description)}
+
+{$linc = "<a href='{$v.link}'>далее…</a>" }
+{$v.description = $v.description|regex_replace:"/далее..*/":$linc}
+
+{capture 'block'}
+{if (isset($v['category']) && is_string($v['category']))}<b>{$v.category}</b>{/if}
+
+
+<a href='{$v.link}'>{$v.title}</a>
+
+{$v.description}
+
+{if $keys} {key l=1 t=$v.title c=$v.link} {/if}
+{/capture}
+
+{if isset($like) && $like}
+	{import c=$like}
+{/if}
+
+{tg_sendMessage text=$smarty.capture.block disable_web_page_preview=0 chat_id=$chat_id disable_notification=$disable_notification keys=1}
+
+{/if}
+{key_clear}
