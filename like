@@ -1,0 +1,7 @@
+{like assign='list' roll_back=1 multi=0 change=1}
+{*roll_back - можно отозвать лайк, multi -  разрешает лайки под несколькими кнопками сразу, change - изменение*}
+{key l=90 t="🔥 `$list[1]`" c="/repost__like 1"}
+{key l=90 t="😐 `$list[2]`" c="/repost__like 2"}
+{key l=90 t="👎 `$list[3]`" c="/repost__like 3"}
+{return popup="Спасибо за оценку"}
+{tg_editMessageReplyMarkup}
