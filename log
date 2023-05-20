@@ -1,1 +1,2 @@
-{tg_sendMessage text=$msg chat_id='ВАШ ID Telegram' disable_notification=1 disable_web_page_preview=1 assign='res_log'}
+{tg_sendMessage text=$msg chat_id='xxxxxxxxxxxx' disable_notification=1 disable_web_page_preview=1 assign='res_log'}
+{*chat_id - ваш id для отправки лога о ошибках репоста*}
