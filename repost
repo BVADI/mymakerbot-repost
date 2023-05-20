@@ -1,4 +1,5 @@
 {if $is_admin}
+ {*VK*}
  {interval time=1200} {*Интервал опроса группы ВК в сек.*}
  {$service_key='xxxxxxxxx'} {*Ключь от приложения VK*}
  {*$token='zzzzzzzz'*} {*Личный токен - не обязятельно, можно получить в старом боте, но с ним можно выдернуть исходные ссылки на видео*}
@@ -11,6 +12,23 @@
     show_repost_date=0
     like='/like'
  }
+ 
+ {*RSS*}
+  {rss url='http://tourclub.misis.ru/news/rss/'}
+  {iterator from=$rss c='/view_rss'  chat_id=['@tkmisis'] 
+    black_list=['VK.Widgets','vk_post']
+    disable_notif_start = 23
+    disable_notif_stop = 7
+  }
+  
+ {*Ютуб*}
+  {youtube channel='UCMDczCuyrKIG-5kdIQ7Kuiw'}
+  {$youtubekey='wwwwwwwwwwwwwwwwwwwwwwwwww'} {*YouTube Data API - нужно получить отдельно: https://dzen.ru/media/bysib/kak-poluchit-rabochii-kliuch-google-api-key-ot-youtube-600878679444cb7e98fa0d38*}
+  {iterator from=$youtube c='/view_youtube' chat_id=['@tkmisis']
+    disable_notif_start = 23
+    disable_notif_stop = 7
+    src_link=0
+    }  
 {/if}    
 
 {*Все зеленое в коде - комментарии или выключенный код*}
