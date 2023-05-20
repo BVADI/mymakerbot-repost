@@ -1,0 +1,57 @@
+{key_clear}
+{if !isset($black_list)}{$black_list=[]}{/if}
+{if !isset($white_list)}{$white_list=[]}{/if}
+{if !isset($registered)}{$registered=1}{/if}
+{if !isset($src_link)}{$src_link=1}{/if}
+{if !isset($sign)}{$sign=''}{/if}
+{if !isset($group)}{$group='youtube'}{/if}
+{if !isset($disable_notification)}{$disable_notification=0}{/if}
+{if !isset($disable_notif_start)}{$disable_notif_start=''}{/if}
+{if !isset($disable_notif_stop)}{$disable_notif_stop=''}{/if}
+
+ {if $v.title|check_black_list:$black_list && $v.title|check_white_list:$white_list 
+	&& (!$registered || !$v.id|group_youtube:$group:1) }
+
+ {if !isset($keys)}
+   {$keys=0}
+ {/if}
+
+ {$vid = str_replace('yt:video:', '', $v.id)}
+ 
+ {$url="https://www.googleapis.com/youtube/v3/videos?id={$vid}&key={$youtubekey}&part=snippet"}
+ {api url=$url method='GET' format='json' assign='desc2'}
+
+{* Выключение уведомлений *}
+{if !empty($disable_notif_stop) && !empty($disable_notif_start)}
+	{$date = strtotime($v.published)}
+	{$tstart = strtotime("today + {$disable_notif_start} hours")}
+	{$tstop = strtotime("today + {$disable_notif_start} hours")}
+	{if $tstart < $tstop}
+		{if $date > $tstart && $date < $tstop}
+   		 	{$disable_notification = 1}
+		{/if}
+ 	{else} 
+		{if $date > $tstart || $date < $tstop}
+    		{$disable_notification = 1}
+    	{/if}
+	{/if} 
+{/if}
+
+{capture 'block'}
+ {$desc2.items.0.snippet.description}
+
+🎥 <a href='{$v['link']['@attributes']['href']}'>{$v.title}</a>
+
+{if $keys}
+{key l=1 t=$v.title c=$v['link']['@attributes']['href']}
+{/if}
+
+{/capture}
+
+{if isset($like) && $like}
+	{import c=$like}
+{/if}
+
+{tg_sendMessage text=$smarty.capture.block chat_id=$chat_id disable_notification=$disable_notification keys=1}
+{/if}
+{key_clear}
